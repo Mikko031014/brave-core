@@ -30,7 +30,10 @@ using namespace braveledger_bat_get_media;
 using namespace braveledger_bat_get_media;
 using namespace braveledger_bat_state;
 using namespace braveledger_bat_contribution;
-using namespace std::placeholders;
+using std::placeholders::_1;
+using std::placeholders::_2;
+using std::placeholders::_3;
+using std::placeholders::_4;
 
 namespace bat_ledger {
 
@@ -655,7 +658,9 @@ void LedgerImpl::OnRecoverWallet(
                                   ledgerGrants);
 }
 
-void LedgerImpl::SolveGrantCaptcha(const std::string& solution, const std::string& promotionId) const {
+void LedgerImpl::SolveGrantCaptcha(
+    const std::string& solution,
+    const std::string& promotionId) const {
   bat_client_->setGrant(solution, promotionId);
 }
 

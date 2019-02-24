@@ -13,11 +13,11 @@
 #include "brave/components/services/bat_ledger/bat_ledger_client_mojo_proxy.h"
 #include "mojo/public/cpp/bindings/map.h"
 
-using namespace std::placeholders;
+using std::placeholders::_1;
 
 namespace bat_ledger {
 
-namespace {  // TODO, move into a util class
+namespace {  // TODO(Nejc Zdovc): Move into a util class
 
 ledger::PUBLISHER_EXCLUDE ToLedgerPublisherExclude(int32_t exclude) {
   return (ledger::PUBLISHER_EXCLUDE)exclude;
@@ -369,6 +369,16 @@ void BatLedgerImpl::AdSustained(const std::string& info) {
   ledger_->AdSustained(info);
 }
 
+// static
+void BatLedgerImpl::OnGetAdsNotificationsHistory(
+    CallbackHolder<GetAdsNotificationsHistoryCallback>* holder,
+    std::unique_ptr<ledger::TransactionsInfo> history) {
+  std::string json_transactions = history.get() ? history->ToJson() : "";
+  if (holder->is_valid())
+    std::move(holder->get()).Run(json_transactions);
+  delete holder;
+}
+
 void BatLedgerImpl::GetAdsNotificationsHistory(
     const uint64_t from_timestamp_seconds,
     const uint64_t to_timestamp_seconds,
@@ -379,16 +389,6 @@ void BatLedgerImpl::GetAdsNotificationsHistory(
   ledger_->GetAdsNotificationsHistory(from_timestamp_seconds,
       to_timestamp_seconds, std::bind(
       BatLedgerImpl::OnGetAdsNotificationsHistory, holder, _1));
-}
-
-// static
-void BatLedgerImpl::OnGetAdsNotificationsHistory(
-    CallbackHolder<GetAdsNotificationsHistoryCallback>* holder,
-    std::unique_ptr<ledger::TransactionsInfo> history) {
-  std::string json_transactions = history.get() ? history->ToJson() : "";
-  if (holder->is_valid())
-    std::move(holder->get()).Run(json_transactions);
-  delete holder;
 }
 
 }  // namespace bat_ledger

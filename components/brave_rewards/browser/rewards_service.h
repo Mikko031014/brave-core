@@ -3,8 +3,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef BRAVE_COMPONENTS_BRAVE_REWARDS_BROWSER_REWARDS_SERVICE_H_
-#define BRAVE_COMPONENTS_BRAVE_REWARDS_BROWSER_REWARDS_SERVICE_H_
+#ifndef SRC_BRAVE_COMPONENTS_BRAVE_REWARDS_BROWSER_REWARDS_SERVICE_H_
+#define SRC_BRAVE_COMPONENTS_BRAVE_REWARDS_BROWSER_REWARDS_SERVICE_H_
 
 #include <map>
 #include <memory>
@@ -165,7 +165,8 @@ class RewardsService : public KeyedService {
     const GetPendingContributionsTotalCallback& callback) = 0;
   virtual void GetRewardsMainEnabled(
     const GetRewardsMainEnabledCallback& callback) const = 0;
-  // TODO remove this hack when ads is moved to the same process as ledger
+  // TODO(Terry Mancey): remove this hack when ads is moved to the same process
+  // as ledger
   virtual void SetCatalogIssuers(const std::string& json) = 0;
   virtual void AdSustained(const std::string& json) = 0;
   virtual void GetAdsNotificationsHistory(
@@ -189,4 +190,4 @@ class RewardsService : public KeyedService {
 
 }  // namespace brave_rewards
 
-#endif  // BRAVE_COMPONENTS_BRAVE_REWARDS_BROWSER_REWARDS_SERVICE_H_
+#endif  // SRC_BRAVE_COMPONENTS_BRAVE_REWARDS_BROWSER_REWARDS_SERVICE_H_
