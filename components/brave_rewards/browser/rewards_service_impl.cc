@@ -5,6 +5,7 @@
 
 #include "brave/components/brave_rewards/browser/rewards_service_impl.h"
 
+#include <ctime>
 #include <algorithm>
 #include <functional>
 #include <limits>
@@ -1431,30 +1432,54 @@ void RewardsServiceImpl::SetCatalogIssuers(const std::string& json) {
   bat_ledger_->SetCatalogIssuers(json);
 }
 
+std::vector<uint64_t> RewardsServiceImpl::GetEarningsRange() {
+  uint64_t difference;
+  auto base_time_now = base::Time::Now();
+  int one_day = (60 * 60 * 24);
+
+  base::Time::Exploded exploded;
+  base_time_now.LocalExplode(&exploded);
+
+  if (exploded.day_of_month > 5) {
+    difference = ((exploded.day_of_month - 5) * one_day);
+  } else {
+    difference = (exploded.day_of_month * one_day);
+  }
+
+  uint64_t now = static_cast<uint64_t>(std::time(nullptr));
+  uint64_t from_timestamp = now - difference;
+
+  return std::vector<uint64_t>({
+    from_timestamp,
+    now
+  });
+}
+
 void RewardsServiceImpl::AdSustained(const std::string& json) {
   if (!Connected()) {
     return;
   }
 
   bat_ledger_->AdSustained(json);
+  GetAdsNotificationsHistory();
+}
+
+void RewardsServiceImpl::GetAdsNotificationsHistory() {
+  if (!Connected()) {
+    return;
+  }
+
+  auto earnings_range = GetEarningsRange();
+
+  bat_ledger_->GetAdsNotificationsHistory(earnings_range[0],
+      earnings_range[1], base::BindOnce(
+      &RewardsServiceImpl::OnGetAdsNotificationsHistoryMojoProxy, AsWeakPtr()));
 }
 
 void RewardsServiceImpl::SetConfirmationsIsReady(const bool is_ready) {
   auto* ads_service = brave_ads::AdsServiceFactory::GetForProfile(profile_);
   if (ads_service)
     ads_service->SetConfirmationsIsReady(is_ready);
-}
-
-void RewardsServiceImpl::GetAdsNotificationsHistory(
-    const uint64_t from_timestamp_seconds,
-    const uint64_t to_timestamp_seconds) {
-  if (!Connected()) {
-    return;
-  }
-
-  bat_ledger_->GetAdsNotificationsHistory(from_timestamp_seconds,
-      to_timestamp_seconds, base::BindOnce(
-      &RewardsServiceImpl::OnGetAdsNotificationsHistoryMojoProxy, AsWeakPtr()));
 }
 
 void RewardsServiceImpl::OnGetAdsNotificationsHistoryMojoProxy(

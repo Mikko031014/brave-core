@@ -169,12 +169,10 @@ class RewardsService : public KeyedService {
   // as ledger
   virtual void SetCatalogIssuers(const std::string& json) = 0;
   virtual void AdSustained(const std::string& json) = 0;
-  virtual void GetAdsNotificationsHistory(
-      const uint64_t from_timestamp_seconds,
-      const uint64_t to_timestamp_seconds) = 0;
 
   virtual void GetAddressesForPaymentId(
       const GetAddressesCallback& callback) = 0;
+  virtual void GetAdsNotificationsHistory() = 0;
 
   void AddObserver(RewardsServiceObserver* observer);
   void RemoveObserver(RewardsServiceObserver* observer);

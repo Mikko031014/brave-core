@@ -185,6 +185,7 @@ class RewardsServiceImpl : public RewardsService,
       const GetRewardsMainEnabledCallback& callback) const override;
 
   void GetAddressesForPaymentId(const GetAddressesCallback& callback) override;
+  std::vector<uint64_t> GetEarningsRange();
 
   // Testing methods
   void SetLedgerEnvForTesting();
@@ -331,9 +332,7 @@ class RewardsServiceImpl : public RewardsService,
   void SetCatalogIssuers(const std::string& json) override;
   void AdSustained(const std::string& json) override;
   void SetConfirmationsIsReady(const bool is_ready) override;
-  void GetAdsNotificationsHistory(
-      const uint64_t from_timestamp_seconds,
-      const uint64_t to_timestamp_seconds) override;
+  void GetAdsNotificationsHistory() override;
 
   void OnExcludedSitesChanged(const std::string& publisher_id) override;
   void OnPanelPublisherInfo(ledger::Result result,

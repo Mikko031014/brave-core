@@ -38,7 +38,7 @@ class SettingsPage extends React.Component<Props, {}> {
     this.actions.getContributeList()
     this.actions.getPendingContributionsTotal()
     this.actions.getReconcileStamp()
-    this.getAdsNotifications()
+    this.actions.getAdsNotifications()
   }
 
   componentDidMount () {
@@ -54,7 +54,6 @@ class SettingsPage extends React.Component<Props, {}> {
     this.actions.getWalletProperties()
     this.balanceTimerId = setInterval(() => {
       this.actions.getWalletProperties()
-      this.getAdsNotifications()
     }, 60000)
 
     if (this.props.rewardsData.firstLoad === false) {
@@ -77,25 +76,6 @@ class SettingsPage extends React.Component<Props, {}> {
       // https://github.com/brave/brave-browser/issues/3061
       this.actions.getWalletPassphrase()
     }
-  }
-
-  getAdsNotifications = () => {
-    let difference
-    const now = new Date().getTime()
-    const date = new Date().getDate()
-    const day = (1000 * 60 * 60 * 24)
-
-    // Payment date is hard coded as the fifth for now
-    if (date > 5) {
-      difference = ((date - 5) * day)
-    } else {
-      difference = (date * day)
-    }
-
-    const toTimestamp = Math.round((now / 1000))
-    const fromTimestamp = Math.round((now - difference) / 1000)
-
-    this.actions.getAdsNotifications(fromTimestamp, toTimestamp)
   }
 
   componentDidUpdate (prevProps: Props) {

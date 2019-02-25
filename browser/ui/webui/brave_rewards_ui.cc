@@ -962,16 +962,7 @@ void RewardsDOMHandler::GetAddressesForPaymentId(
 
 void RewardsDOMHandler::GetAdsNotificationsHistory(
     const base::ListValue* args) {
-  std::string from_timestamp;
-  args->GetString(0, &from_timestamp);
-  uint64_t from_timestamp_seconds = std::stoull(from_timestamp);
-
-  std::string to_timestamp;
-  args->GetString(1, &to_timestamp);
-  uint64_t to_timestamp_seconds = std::stoull(to_timestamp);
-
-  rewards_service_->GetAdsNotificationsHistory(from_timestamp_seconds,
-      to_timestamp_seconds);
+  rewards_service_->GetAdsNotificationsHistory();
 }
 
 void RewardsDOMHandler::OnAdsNotificationsData(
