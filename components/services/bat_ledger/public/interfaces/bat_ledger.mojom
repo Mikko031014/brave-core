@@ -100,7 +100,6 @@ interface BatLedger {
 
   SetCatalogIssuers(string info);
   AdSustained(string info);
-
   GetRewardsInternalsInfo() => (string info);
 };
 

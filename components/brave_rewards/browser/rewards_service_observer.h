@@ -20,8 +20,6 @@ class RewardsServiceObserver : public base::CheckedObserver {
  public:
   ~RewardsServiceObserver() override {}
 
-  virtual void OnRewardsInitialized(RewardsService* rewards_service,
-                                    int error_code) {};
   virtual void OnWalletInitialized(RewardsService* rewards_service,
                                int error_code) {};
   virtual void OnWalletProperties(
